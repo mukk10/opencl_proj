@@ -14,13 +14,14 @@ const cl_platform_info gpcc_platAttType[] = {
                                         CL_PLATFORM_EXTENSIONS };
 
 const char *gpcc_devAtt[] = { "Name", "Global-Mem", "Local-Mem", "Max-Workgroup", 
-                                "Max-Compute-Units" };
+                                "Max-Compute-Units", "Max-Workitem-dim" };
 const cl_device_info gpcc_devAttType[] = {
                                         CL_DEVICE_NAME,
                                         CL_DEVICE_GLOBAL_MEM_SIZE,
                                         CL_DEVICE_LOCAL_MEM_SIZE,
                                         CL_DEVICE_MAX_WORK_GROUP_SIZE,
-                                        CL_DEVICE_MAX_COMPUTE_UNITS };
+                                        CL_DEVICE_MAX_COMPUTE_UNITS,
+                                        CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS };
 
 int get_all_cl_devices(cl_platform_id pc_plat, cl_device_id *c_dev_id)
 {
@@ -39,13 +40,11 @@ void print_cl_device_info(cl_device_id pc_dev)
     
     for(int i=1;i<sizeof(gpcc_devAtt)/sizeof(gpcc_devAtt[0]);i++)
     {
-        std::cout << "DEBUG:\ti: " << i << "\n";
         clGetDeviceInfo(pc_dev, gpcc_devAttType[i], 0, NULL, &i_infoSizeBytes);
         unsigned long int pi_info; 
         clGetDeviceInfo(pc_dev, gpcc_devAttType[i], i_infoSizeBytes, &pi_info, NULL);
         std::cout   << "INFO:\t" << gpcc_devAtt[i] << ": " << pi_info << "\n";
      }
-    std::cout << "DEBUG:\tDevice info done\n";
 }
 
 cl_uint get_all_cl_platforms(cl_platform_id *c_plat_id)
@@ -82,7 +81,7 @@ int main(void)
         std::cout << "INFO:\tNumber of devices: " << i_nDevices << "\n";
         for(int j=0;j<i_nDevices;j++)
         {
-            std::cout << "Device number: " << j << "\t----\n";
+            std::cout << "---- Device number: " << j << " ----\n";
             print_cl_device_info(c_device_id[j]);
         }
         std::cout << "\n\n";
